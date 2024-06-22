@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	calcapi "goa_test"
+	goatest "goa_test"
 	calc "goa_test/gen/calc"
 	"log"
 	"net"
@@ -32,7 +32,7 @@ func main() {
 		logger *log.Logger
 	)
 	{
-		logger = log.New(os.Stderr, "[calcapi] ", log.Ltime)
+		logger = log.New(os.Stderr, "[goatest] ", log.Ltime)
 	}
 
 	// Initialize the services.
@@ -40,7 +40,7 @@ func main() {
 		calcSvc calc.Service
 	)
 	{
-		calcSvc = calcapi.NewCalc(logger)
+		calcSvc = goatest.NewCalc(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services

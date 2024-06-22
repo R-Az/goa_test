@@ -18,9 +18,8 @@ import (
 
 // Server lists the calc service endpoint HTTP handlers.
 type Server struct {
-	Mounts             []*MountPoint
-	Multiply           http.Handler
-	GenHTTPOpenapiJSON http.Handler
+	Mounts   []*MountPoint
+	Multiply http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -47,18 +46,12 @@ func New(
 	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
 	errhandler func(context.Context, http.ResponseWriter, error),
 	formatter func(ctx context.Context, err error) goahttp.Statuser,
-	fileSystemGenHTTPOpenapiJSON http.FileSystem,
 ) *Server {
-	if fileSystemGenHTTPOpenapiJSON == nil {
-		fileSystemGenHTTPOpenapiJSON = http.Dir(".")
-	}
 	return &Server{
 		Mounts: []*MountPoint{
 			{"Multiply", "GET", "/multiply/{a}/{b}"},
-			{"./gen/http/openapi.json", "GET", "/openapi.json"},
 		},
-		Multiply:           NewMultiplyHandler(e.Multiply, mux, decoder, encoder, errhandler, formatter),
-		GenHTTPOpenapiJSON: http.FileServer(fileSystemGenHTTPOpenapiJSON),
+		Multiply: NewMultiplyHandler(e.Multiply, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -76,7 +69,6 @@ func (s *Server) MethodNames() []string { return calc.MethodNames[:] }
 // Mount configures the mux to serve the calc endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountMultiplyHandler(mux, h.Multiply)
-	MountGenHTTPOpenapiJSON(mux, goahttp.Replace("", "/./gen/http/openapi.json", h.GenHTTPOpenapiJSON))
 }
 
 // Mount configures the mux to serve the calc endpoints.
@@ -133,10 +125,4 @@ func NewMultiplyHandler(
 			errhandler(ctx, w, err)
 		}
 	})
-}
-
-// MountGenHTTPOpenapiJSON configures the mux to serve GET request made to
-// "/openapi.json".
-func MountGenHTTPOpenapiJSON(mux goahttp.Muxer, h http.Handler) {
-	mux.Handle("GET", "/openapi.json", h.ServeHTTP)
 }

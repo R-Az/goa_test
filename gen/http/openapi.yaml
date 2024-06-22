@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-    title: Calculator Service
+    title: Goa Test Service
     description: HTTP service for multiplying numbers, a goa teaser
     version: 0.0.1
 host: localhost:8088
@@ -41,9 +41,9 @@ paths:
     /openapi.json:
         get:
             tags:
-                - calc
+                - openapi
             summary: Download ./gen/http/openapi.json
-            operationId: calc#/openapi.json
+            operationId: openapi#/openapi.json
             responses:
                 "200":
                     description: File downloaded

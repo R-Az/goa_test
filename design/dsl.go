@@ -3,10 +3,10 @@ package design
 import . "goa.design/goa/v3/dsl"
 
 // API describes the global properties of the API server.
-var _ = API("calc", func() {
-	Title("Calculator Service")
+var _ = API("goa_test", func() {
+	Title("Goa Test Service")
 	Description("HTTP service for multiplying numbers, a goa teaser")
-	Server("calc", func() {
+	Server("goa_test", func() {
 		Host("localhost", func() { URI("http://localhost:8088") })
 	})
 })
@@ -38,6 +38,9 @@ var _ = Service("calc", func() {
 			Response(StatusOK)
 		})
 	})
+})
 
+var _ = Service("openapi", func() {
+	Description("openapi json")
 	Files("/openapi.json", "./gen/http/openapi.json")
 })

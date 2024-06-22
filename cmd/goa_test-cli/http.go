@@ -1,7 +1,7 @@
 package main
 
 import (
-	cli "goa_test/gen/http/cli/calc"
+	cli "goa_test/gen/http/cli/goa_test"
 	"net/http"
 	"time"
 
