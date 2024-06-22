@@ -19,6 +19,7 @@ import (
 type Server struct {
 	Mounts             []*MountPoint
 	GenHTTPOpenapiJSON http.Handler
+	GenHTTPOpenapiYaml http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -46,15 +47,21 @@ func New(
 	errhandler func(context.Context, http.ResponseWriter, error),
 	formatter func(ctx context.Context, err error) goahttp.Statuser,
 	fileSystemGenHTTPOpenapiJSON http.FileSystem,
+	fileSystemGenHTTPOpenapiYaml http.FileSystem,
 ) *Server {
 	if fileSystemGenHTTPOpenapiJSON == nil {
 		fileSystemGenHTTPOpenapiJSON = http.Dir(".")
 	}
+	if fileSystemGenHTTPOpenapiYaml == nil {
+		fileSystemGenHTTPOpenapiYaml = http.Dir(".")
+	}
 	return &Server{
 		Mounts: []*MountPoint{
 			{"./gen/http/openapi.json", "GET", "/openapi.json"},
+			{"./gen/http/openapi.yaml", "GET", "/openapi.yaml"},
 		},
 		GenHTTPOpenapiJSON: http.FileServer(fileSystemGenHTTPOpenapiJSON),
+		GenHTTPOpenapiYaml: http.FileServer(fileSystemGenHTTPOpenapiYaml),
 	}
 }
 
@@ -71,6 +78,7 @@ func (s *Server) MethodNames() []string { return openapi.MethodNames[:] }
 // Mount configures the mux to serve the openapi endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountGenHTTPOpenapiJSON(mux, goahttp.Replace("", "/./gen/http/openapi.json", h.GenHTTPOpenapiJSON))
+	MountGenHTTPOpenapiYaml(mux, goahttp.Replace("", "/./gen/http/openapi.yaml", h.GenHTTPOpenapiYaml))
 }
 
 // Mount configures the mux to serve the openapi endpoints.
@@ -82,4 +90,10 @@ func (s *Server) Mount(mux goahttp.Muxer) {
 // "/openapi.json".
 func MountGenHTTPOpenapiJSON(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/openapi.json", h.ServeHTTP)
+}
+
+// MountGenHTTPOpenapiYaml configures the mux to serve GET request made to
+// "/openapi.yaml".
+func MountGenHTTPOpenapiYaml(mux goahttp.Muxer, h http.Handler) {
+	mux.Handle("GET", "/openapi.yaml", h.ServeHTTP)
 }

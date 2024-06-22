@@ -51,3 +51,16 @@ paths:
                         type: file
             schemes:
                 - http
+    /openapi.yaml:
+        get:
+            tags:
+                - openapi
+            summary: Download ./gen/http/openapi.yaml
+            operationId: openapi#/openapi.yaml
+            responses:
+                "200":
+                    description: File downloaded
+                    schema:
+                        type: file
+            schemes:
+                - http

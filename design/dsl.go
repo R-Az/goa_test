@@ -43,4 +43,5 @@ var _ = Service("calc", func() {
 var _ = Service("openapi", func() {
 	Description("openapi json")
 	Files("/openapi.json", "./gen/http/openapi.json")
+	Files("/openapi.yaml", "./gen/http/openapi.yaml")
 })

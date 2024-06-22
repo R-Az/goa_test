@@ -52,6 +52,15 @@ paths:
             responses:
                 "200":
                     description: File downloaded
+    /openapi.yaml:
+        get:
+            tags:
+                - openapi
+            summary: Download ./gen/http/openapi.yaml
+            operationId: openapi#/openapi.yaml
+            responses:
+                "200":
+                    description: File downloaded
 components: {}
 tags:
     - name: openapi
